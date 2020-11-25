@@ -125,12 +125,10 @@ FILE *fp;
 int i;
 
 	//stat("Writing saved game to %s...", pfname);
-	char path[PATH_MAX];
-	sprintf(path, "%s/.cavestory/%s", getenv("HOME"), pfname);
-	fp = fileopen(path, "wb");
+	fp = fileopen(pfname, "wb");
 	if (!fp)
 	{
-		staterr("profile_save: unable to open %s", path);
+		staterr("profile_save: unable to open %s", pfname);
 		return 1;
 	}
 	
