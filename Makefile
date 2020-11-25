@@ -8,16 +8,16 @@
 ####### Compiler, tools and options
 
 # Please uncomment "-D_L10N_CP1251" for Russian Localization
-CC            = mipsel-linux-gcc
-CXX           = mipsel-linux-g++
-DEFINES       = -D_320X240 -D_DINGUX -D_SDL_MIXER # -D_L10N_CP1251
-CFLAGS        = -pipe -mips32 -O2 -mabi=32 -msoft-float -ffast-math -G0 $(DEFINES)
-CXXFLAGS      = -pipe -mips32 -O2 -O2 -mabi=32 -msoft-float -ffast-math -G0 $(DEFINES)
-INCPATH       = -I/opt/mipsel-linux-uclibc/usr/include -I/opt/mipsel-linux-uclibc/usr/include/SDL -I.
-LINK          = mipsel-linux-g++
+CC            = /opt/gcw0-toolchain/bin/mipsel-linux-gcc
+CXX           = /opt/gcw0-toolchain/bin/mipsel-linux-g++
+DEFINES       = -DCONFIG_ENABLE_TTF -D_DINGUX -D_SDL_MIXER # -D_L10N_CP1251
+CFLAGS        = -pipe -mips32 -O2 -mabi=32 -msoft-float -ffast-math -G0 `/opt/gcw0-toolchain/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/sdl-config --libs --cflags` $(DEFINES)
+CXXFLAGS      = -pipe -mips32 -O2 -O2 -mabi=32 -msoft-float -ffast-math -G0 `/opt/gcw0-toolchain/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/sdl-config --libs --cflags` $(DEFINES)
+INCPATH       = -I/opt/gcw0-toolchain/usr/include -I/opt/gcw0-toolchain/usr/include/SDL -I.
+LINK          = /opt/gcw0-toolchain/bin/mipsel-linux-g++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/opt/mipsel-linux-uclibc/usr/lib
 LIBS          = -lSDLmain -lSDL -lSDL_ttf -lSDL_mixer 
-STRIP         = mipsel-linux-strip
+STRIP         = /opt/gcw0-toolchain/bin/mipsel-linux-strip
 DEL_FILE      = rm -f
 
 ####### Output directory
@@ -308,7 +308,7 @@ OBJECTS =	caret.o \
 			weed.o \
 			vbesync.o 
 			
-TARGET        = nx.dge
+TARGET        = nxengine 
 
 first: all
 ####### Implicit rules

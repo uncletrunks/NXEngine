@@ -50,7 +50,7 @@ static SDL_Surface *shadesfc = NULL;
 
 static bool initilized = false;
 static bool rendering = true;
-static bool shrink_spaces = true;
+static bool shrink_spaces = false;
 static int fontheight = 0;
 
 NXFont whitefont;
