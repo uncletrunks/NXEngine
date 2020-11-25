@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "settings.h"
 #include "replay.h"
 #include "settings.fdh"
@@ -26,6 +27,8 @@ bool settings_load(Settings *setfile)
 		stat("No saved settings; using defaults.");
 		
 		memset(setfile, 0, sizeof(Settings));
+
+		setfile->version = SETTINGS_VERSION;
 #if defined (_480X272) || defined (_320X240)
         setfile->resolution = 0;		// 640x480 Windowed, should be safe value
 #else
@@ -43,7 +46,7 @@ bool settings_load(Settings *setfile)
 		setfile->no_quake_in_hell = false;
 		setfile->inhibit_fullscreen = false;
 #ifndef __HAIKU__
-		setfile->files_extracted = false;
+		setfile->files_extracted = true;
 #else
 		setfile->files_extracted = true;
 #endif
@@ -88,11 +91,15 @@ FILE *fp;
 	free(haikuPath);
 	fp = fileopen(path, "rb");
 #else
-	fp = fileopen(setfilename, "rb");
+	char path[PATH_MAX];
+	sprintf(path, "%s/.cavestory", getenv("HOME"));
+	mkdir(path, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+	sprintf(path, "%s/%s", path, setfilename);
+	fp = fileopen(path, "rb");
 #endif
 	if (!fp)
 	{
-		stat("Couldn't open file %s.", setfilename);
+		stat("Couldn't open file %s.", path);
 		return 1;
 	}
 	
@@ -101,6 +108,7 @@ FILE *fp;
 	if (setfile->version != SETTINGS_VERSION)
 	{
 		stat("Wrong settings version %04x.", setfile->version);
+		stat("Settings version should be %04x.", SETTINGS_VERSION);
 		return 1;
 	}
 	
@@ -125,11 +133,13 @@ FILE *fp;
 	free(haikuPath);
 	fp = fileopen(path, "wb");
 #else
-	fp = fileopen(setfilename, "wb");
+	char path[PATH_MAX];
+	sprintf(path, "%s/.cavestory/%s", getenv("HOME"), setfilename);
+	fp = fileopen(path, "wb");
 #endif
 	if (!fp)
 	{
-		stat("Couldn't open file %s.", setfilename);
+		stat("Couldn't open file %s.", path);
 		return 1;
 	}
 	

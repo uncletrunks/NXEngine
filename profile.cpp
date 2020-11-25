@@ -17,7 +17,6 @@ bool profile_load(const char *pfname, Profile *file)
 {
 int i, curweaponslot;
 FILE *fp;
-
 	stat("Loading profile from %s...", pfname);
 	memset(file, 0, sizeof(Profile));
 	
@@ -126,10 +125,12 @@ FILE *fp;
 int i;
 
 	//stat("Writing saved game to %s...", pfname);
-	fp = fileopen(pfname, "wb");
+	char path[PATH_MAX];
+	sprintf(path, "%s/.cavestory/%s", getenv("HOME"), pfname);
+	fp = fileopen(path, "wb");
 	if (!fp)
 	{
-		staterr("profile_save: unable to open %s", pfname);
+		staterr("profile_save: unable to open %s", path);
 		return 1;
 	}
 	
@@ -229,9 +230,9 @@ const char *GetProfileName(int num)
 {
 #ifndef __HAIKU__
 	if (num == 0)
-		return "profile.dat";
+		return stprintf("%s/.cavestory/profile.dat", getenv("HOME"));
 	else
-		return stprintf("profile%d.dat", num+1);
+		return stprintf("%s/.cavestory/profile%d.dat", getenv("HOME"), num+1);
 #else
 	char path[PATH_MAX];
 	char *haikuPath = getHaikuSettingsPath();
